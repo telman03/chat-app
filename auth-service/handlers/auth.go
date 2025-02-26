@@ -65,3 +65,31 @@ func Login(c *fiber.Ctx) error {
 
     return c.JSON(fiber.Map{"token": tokenString})
 }
+
+// 🚀 New Function: Verify Token
+func VerifyToken(c *fiber.Ctx) error {
+	var request struct {
+		Token string `json:"token"`
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid input"})
+	}
+
+	// Parse the token
+	token, err := jwt.Parse(request.Token, func(token *jwt.Token) (interface{}, error) {
+		return []byte(SecretKey), nil
+	})
+
+	if err != nil || !token.Valid {
+		return c.Status(401).JSON(fiber.Map{"valid": false})
+	}
+
+	// Extract user_id
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || claims["user_id"] == nil {
+		return c.Status(401).JSON(fiber.Map{"valid": false})
+	}
+
+	return c.JSON(fiber.Map{"valid": true, "user_id": claims["user_id"]})
+}

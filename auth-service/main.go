@@ -19,6 +19,7 @@ func main() {
 
     app.Post("/register", handlers.Register)
     app.Post("/login", handlers.Login)
+    app.Post("/auth/verify", handlers.VerifyToken) // 🚀 New route
 
     app.Listen(":8080")
 }

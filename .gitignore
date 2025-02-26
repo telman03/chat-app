@@ -1,0 +1,9 @@
+# Environment variables
+.env
+*.env
+/notification-service/.env
+/messaging-service/.env
+/auth-service/.env
+**/.env
+.env.local
+.env.*.local
